@@ -2,15 +2,12 @@ import socket
 from _thread import *
 import pickle
 import time
+import json
 
 server = "localhost"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-sock.bind((server, port))
 
 try:
     s.bind((server, port))
@@ -20,33 +17,44 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for connection, Server Started")
 
-def read_pos(head_pos):
-    try:
-        if not head_pos:
-            return
-        head_pos = head_pos.split(",")
-        return int(head_pos[0]), int(head_pos[1]), int(head_pos[2]), int(head_pos[3]), int(head_pos[4])
-    except:
-        pass
 
-def make_pos(tup):
-    return str(tup[0]) + "," + str(tup[1]) + "," + str(tup[2])
+def send_json(dictdata):
+    dictJson = json.dumps(dictdata)
+    return dictJson
 
 
+dictdata1 = {
+        "eatBool": False,
+        "gameOverBool": False,
+        "headX": 0,
+        "headY": 0,
+        "tailX": -700,
+        "tailY": -700,
+        "foodX": -700,
+        "foodY": -700,
+        "score": 0
+    }
 
-pos = [[0, (0,0), (-700,-700)], [0, (100,0), (-700,-700)]]
+dictdata2 = {
+        "eatBool": False,
+        "gameOverBool": False,
+        "headX": 100,
+        "headY": 0,
+        "tailX": -700,
+        "tailY": -700,
+        "foodX": -700,
+        "foodY": -700,
+        "score": 0
+    }
 
+pos = [dictdata1, dictdata2]
 
 def threaded_client(conn, player):
-    conn.send(str.encode(make_pos(pos[player])))
-
+    conn.send(send_json(pos[player]).encode())
     while True:
         try:
-            data = read_pos(conn.recv(2048).decode('utf-8'))
-            pos[player][0] = data[0]
-            pos[player][1] = data[1:3]
-            pos[player][2] = data[3:5]
-
+            data = json.loads(conn.recv(2048).decode('utf-8'))
+            pos[player] = data
             if not data:
                 print("Disconnected")
                 break
@@ -55,7 +63,7 @@ def threaded_client(conn, player):
                     reply = pos[0]
                 else:
                     reply = pos[1]
-            conn.sendall(str.encode(make_pos(reply)))
+            conn.sendall(send_json(reply).encode())
         except:
             break
 

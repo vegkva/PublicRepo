@@ -19,7 +19,6 @@ class Network():
         try:
             self.client.connect(self.addr)
             data = self.client.recv(2048).decode()
-            print(f"data: {data}")
             return data
         except:
             pass

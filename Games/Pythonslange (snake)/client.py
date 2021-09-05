@@ -1,12 +1,10 @@
+import json
 import time
 import turtle
 from turtle import Turtle
 from random import randrange
-from _thread import *
-from all_in_one_network import Network
+from networkClass import Network
 from socket import socket, AF_INET, SOCK_DGRAM
-import re
-import pickle
 
 sock = socket(AF_INET, SOCK_DGRAM)
 
@@ -15,7 +13,8 @@ down_ = False
 left_ = False
 right_ = False
 
-eatBool = 0
+gameOverBool = False
+eatBool = False
 tailCount = 0
 
 collision = 0
@@ -54,30 +53,32 @@ class turtle_object(Turtle):
 displacement = 10# pixles
 
 
-def read_pos(head_string):
-    head_pos = re.split(r',\s*(?![^()]*\))', head_string)
-    headPos = head_pos[1].replace('(', '').replace(')', '')
-    tailPos = head_pos[2].replace('(', '').replace(')', '')
-    resHead = tuple(map(float, headPos.split(', ')))
-    resTail = tuple(map(float, tailPos.split(', ')))
-    eatBool = head_pos[0]
-    return tuple(eatBool) + resHead + resTail
+def send_json():
+    dictdata = {
+        "eatBool": eatBool,
+        "gameOverBool": gameOverBool,
+        "headX": head1.xcor(),
+        "headY": head1.ycor(),
+        "tailX": tail[tailCount].xcor(),
+        "tailY": tail[tailCount].ycor(),
+        "foodX": food.xcor(),
+        "foodY": food.ycor(),
+        "score": score
+    }
+    dictJson = json.dumps(dictdata)
 
-def make_pos(tup):
-    output = str(tup[0]) + "," + str(tup[1]) + "," + str(tup[2]) + "," + str(tup[3])  + "," + str(tup[4])
-    return output
-
+    return network.send(dictJson)
 
 network = Network()
-startPos = read_pos(network.getPos())
+startPos = json.loads(network.getPos())
 
 
 '''Instantiate snake and food'''
-head1 = turtle_object((startPos[1], startPos[2]), "square", "red")
-head1.setpos(20, 20)
+head1 = turtle_object((startPos["headX"], startPos["headY"]), "square", "red")
+
 head2 = turtle_object((50, 50), "square", "white")
-food = turtle_object((-500, 500), "turtle", "yellow")
-tail = [turtle_object((startPos[3],startPos[4]), "square", "blue")]
+food = turtle_object((startPos["foodX"], startPos["foodY"]), "turtle", "yellow")
+tail = [turtle_object((startPos["tailX"],startPos["tailY"]), "square", "blue")]
 tail2 = []
 tail3 = []
 
@@ -153,68 +154,57 @@ def moveTail2():
         h2x = element._x
         h2y = element._y
 
-def upper_border():
+def borders():
     global n
-    if head1.ycor() > 370 + n:
-        head1.sety(-350)
+    #Upper
+    if head1.ycor() > 330 + n:
+        head1.sety(-340)
+    #Lower
+    if head1.ycor() < -330 - n:
+        head1.sety(340)
+    #Left
+    if head1.xcor() < -480 - n:
+        head1.setx(490)
+    #Right
+    if head1.xcor() > 480 + n:
+        head1.setx(-490)
 
-def lower_border():
-    global n
-    if head1.ycor() < -350 - n:
-        head1.sety(350)
 
-def left_border():
-    global n
-    if head1.xcor() < -550 - n:
-        head1.setx(530)
-
-def right_border():
-    global n
-    if head1.xcor() > 550 + n:
-        head1.setx(-530)
-
-def send_receive():
-    print(tail)
-    head2Pos = read_pos(network.send(make_pos(
-        (eatBool, int(head1.xcor()), int(head1.ycor()), int(tail[tailCount].xcor()), int(tail[tailCount].ycor())))))
-    head2.setx(head2Pos[1])
-    head2.sety(head2Pos[2])
 
 def update_tail():
-    global eatBool, head2, reset
+    global eatBool, head2, reset, gameOverBool, tail2
 
-    head2Pos = read_pos(network.send(make_pos(
-        (eatBool, int(head1.xcor()), int(head1.ycor()), int(tail[tailCount].xcor()), int(tail[tailCount].ycor())))))
+    player2Data = json.loads(send_json())
     if reset:
-        print(tail2)
-        head2 = turtle_object((head2Pos[1], head2Pos[2]), "square", "white")
+        for element in tail2:
+            element.showturtle()
+        head2 = turtle_object((player2Data["headX"], player2Data["headY"]), "square", "white")
         reset = False
-    head2.setx(head2Pos[1])
-    head2.sety(head2Pos[2])
-    eatBool = int(head2Pos[0])
+    head2.setx(player2Data["headX"])
+    head2.sety(player2Data["headY"])
+    eatBool = player2Data["eatBool"]
+    gameOverBool = player2Data["gameOverBool"]
     if not tail2:
-        tail2.append(turtle_object((head2Pos[3], head2Pos[4]), "square", "white"))
+        tail2.append(turtle_object((player2Data["tailX"], player2Data["tailY"]), "square", "white"))
     if tail2:
-        if tail2[-1].xcor() == head2Pos[2] and tail2[-1].ycor() == head2Pos[3]:
+        if tail2[-1].xcor() == player2Data["headX"] and tail2[-1].ycor() == player2Data["headY"]:
             pass
         else:
-            if eatBool == 1:
+            if eatBool:
 
-                print("eat")
-                tail2.append(turtle_object((head2Pos[2], head2Pos[3]), "square", "green"))
-                eatBool = 0
+                tail2.append(turtle_object((player2Data["tailX"], player2Data["tailY"]), "square", "green"))
+                eatBool = False
 
 
 def check_collision():
     global reset, collision
     if not reset:
         for element in tail2:
-            if head1.xcor() == startPos[1] and head1.ycor() == startPos[2]:
+            if head1.xcor() == startPos["headX"] and head1.ycor() == startPos["headY"]:
                 break
             if head1.xcor() - 20 < element.xcor() < 20 + head1.xcor() and head1.ycor() - 20 < element.ycor() < 20 + head1.ycor():
                 print(element.xcor(), element.ycor())
                 game_over()
-                reset = False
                 break
     # if head1.xcor() - 20 < head2.xcor() < 20 + head1.xcor() and head1.ycor() - 20 < head2.ycor() < 20 + head1.ycor():
     #     game_over()
@@ -222,17 +212,15 @@ def check_collision():
     #     game_over()
 
 def reset_screen():
-    global tail, score, head1, head2, food, tail2, gameOver, tailCount, reset
+    global tail, score, head1, head2, food, tail2, gameOver, tailCount, reset, up_
     reset = True
     tailCount = 0
     tail.clear()
     wn.reset()
     score = 0
     head1 = turtle_object((0, 0), "square", "orange")
-    food = turtle_object((-500, 500), "turtle", "yellow")
     tail = [turtle_object((-700, -700), "square", "blue")]
-    #update_tail()
-    send_receive()
+    tail2 = tail3.copy()
     pen = turtle.Turtle()  #
     pen.speed(0)  #
     pen.color("white")  # <---- TODO: Simplify this code
@@ -240,8 +228,8 @@ def reset_screen():
     pen.hideturtle()  #
     pen.goto(0, 300)  #
     pen.write(f"Score: 0\t Highscore: {highScore}", align="center", font=("Courier", 26, "normal"))
-
     gameOver = False
+    up_ = True
     print("¤¤")
 
 wn.listen()
@@ -261,8 +249,10 @@ pen.write(f"Score: 0\t Highscore: {highScore}", align="center", font=("Courier",
 
 def game_over():
 
-    global highScore, gameOver, up_, down_, left_, right_
+    global highScore, gameOver, up_, down_, left_, right_, gameOverBool, collision, tail3
     gameOver = True
+    gameOverBool = True
+    tail3 = tail2.copy()
     up_ = False
     down_ = False
     left_ = False
@@ -275,6 +265,8 @@ def game_over():
     else:
         highScore = highScore
     print("game over")
+    reset_screen()
+    collision = 1
 
 '''Instructions'''
 instructions = turtle.Turtle()
@@ -290,17 +282,19 @@ instructions.write("DIRECTIONS\nup - 'w'\nleft - 'a'\ndown - 's'"
 
 while True:
 
-
-
-    if gameOver:
-        print(gameOver)
-        reset_screen()
-        collision = 1
+    # if collision == 0:        Collision between players not yet working
+    #     check_collision()
 
     update_tail()
 
-    if collision == 0:
-        check_collision()
+    if gameOverBool:
+        print("player2 game over")
+        tail2.clear()
+        head2.clear()
+        gameOverBool = False
+        reset = False
+        collision = 0
+
 
     play()
 
@@ -308,10 +302,7 @@ while True:
     tail is placed correctly, slower snake = add more sleep-statements'''
     speed = [time.sleep(0.001), time.sleep(0.001)]
 
-    right_border()
-    left_border()
-    lower_border()
-    upper_border()
+    borders()
     fontSize = 50
     for x in tail:
         try:
@@ -342,8 +333,7 @@ while True:
         if head1.xcor() - 20 < food.xcor() < 20 + head1.xcor() and head1.ycor() - 20 < food.ycor() < 20 + head1.ycor():
             pen.clear()
             try:
-                collision = 0
-                eatBool = 1
+                eatBool = True
                 addTail()
                 positions.remove(position)
                 tailCount += 1
