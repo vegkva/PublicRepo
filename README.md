@@ -2,11 +2,11 @@
 Diverse kode ifb. med emner på Universitetet i Bergen og egne prosjekter
 
 
-Games
+###Games
   - PythonSlange (snake laget med python)
 
 
-UiB
+###UiB
   - INF140: Introduksjon til datasikkerhet
         - Diverse encrypt/decrpyt
       
