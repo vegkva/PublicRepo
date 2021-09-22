@@ -14,4 +14,4 @@ Cancel changes
     - Gruppeoppgave (YR look-alike)
   
   - INF226: Programvaresikkerhet
-    - Oppgave (buffer overflow)
+    - Assignment 1 (buffer overflow)
