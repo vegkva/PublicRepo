@@ -7,11 +7,11 @@ Cancel changes
 
 
 ### UiB
-  - **INF140: Introduksjon til datasikkerhet
+  - **INF140: Introduksjon til datasikkerhet**
     - Diverse encrypt/decrpyt
       
-  - **INF142: Datanett
+  - **INF142: Datanett**
     - Gruppeoppgave (YR look-alike)
   
-  - **INF226: Programvaresikkerhet
+  - **INF226: Programvaresikkerhet**
     - Oppgave 1 (buffer overflow)
