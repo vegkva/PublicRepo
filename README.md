@@ -11,7 +11,7 @@ Cancel changes
     - Diverse encrypt/decrpyt
       
   - INF142: Datanett
-        - Gruppeoppgave (YR look-alike)
+    - Gruppeoppgave (YR look-alike)
   
   - INF226: Programvaresikkerhet
-        - Oppgave (buffer overflow)
+    - Oppgave (buffer overflow)
