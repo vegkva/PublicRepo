@@ -18,5 +18,5 @@ Diverse kode ifb. med emner på Universitetet i Bergen og egne prosjekter
     - Gruppeoppgave (YR look-alike)
   
   - **INF226: Programvaresikkerhet**
-    - Oppgave 1 (buffer overflow)
+    - [Oppgave 1 (buffer overflow)](https://github.com/vegkva/PublicRepo/blob/main/UiB/INF226/Assigment%201/write-up.pdf)
     - [Oppgave 2 (sikkerhetsanalyse)](https://github.com/vegkva/PublicRepo/blob/main/UiB/INF226/Assignment%202/SecurityAnalysis.pdf)
