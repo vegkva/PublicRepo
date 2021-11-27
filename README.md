@@ -19,3 +19,4 @@ Diverse kode ifb. med emner på Universitetet i Bergen og egne prosjekter
   
   - **INF226: Programvaresikkerhet**
     - Oppgave 1 (buffer overflow)
+    - Oppgave 2 (sikkerhetsanalyse)
