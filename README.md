@@ -1,6 +1,10 @@
 # PublicRepo
 Diverse kode ifb. med emner på Universitetet i Bergen og egne prosjekter
-Cancel changes
+
+
+### Bug/vulnerability-hunting
+  - Discovered a vulnerability in the norwegian postal service (write up coming soon...)
+
 
 ### Games
   - PythonSlange (snake laget med python)
