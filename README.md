@@ -15,7 +15,7 @@ Diverse kode ifb. med emner på Universitetet i Bergen og egne prosjekter
     - [Diverse encrypt/decrypt](https://github.com/vegkva/PublicRepo/tree/main/UiB/INF140)
       
   - **INF142: Datanett**
-    - [Gruppeoppgave (YR look-alike)](https://github.com/vegkva/PublicRepo/tree/main/UiB/INF142/Group%20assignment)
+    - [Gruppeoppgave (YR look-alike)](https://github.com/vegkva/PublicRepo/tree/main/UiB/INF142/GroupAssignment)
   
   - **INF226: Programvaresikkerhet**
     - [Oppgave 1 (buffer overflow)](https://github.com/vegkva/PublicRepo/blob/main/UiB/INF226/Assignment1/write-up.pdf)
