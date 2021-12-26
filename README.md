@@ -3,7 +3,7 @@ Diverse kode ifb. med emner på Universitetet i Bergen og egne prosjekter
 
 
 ### Bug/vulnerability-hunting
-  - Discovered a bug/vulnerability in a big nordic company (write up coming soon...)
+  - Discovered a bug/vulnerability in a big nordic company (write-up available)
 
 
 ### Games
