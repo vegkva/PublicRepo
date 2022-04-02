@@ -21,3 +21,6 @@ Diverse kode ifb. med emner på Universitetet i Bergen og egne prosjekter
     - [Oppgave 1 (buffer overflow)](https://github.com/vegkva/PublicRepo/blob/main/UiB/INF226/Assignment1/write-up.pdf)
     - [Oppgave 2 (sikkerhetsanalyse av In(secure)Chat)](https://github.com/vegkva/PublicRepo/blob/main/UiB/INF226/Assignment2/SecurityAnalysis.pdf)
     - [Oppgave 3 (implementere sikkerhetsmekanismer til In(secure)Chat)](https://git.app.uib.no/Vegar.Kvaavik/inf226-2021-inchat/)
+  
+  - **INF101: Objektorientert programmering**
+    - [Oppgave 1 (Tetris)](https://github.com/vegkva/PublicRepo/tree/main/UiB/INF101)
